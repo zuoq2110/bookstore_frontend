@@ -1,24 +1,29 @@
 import React, { ChangeEvent, useState } from "react";
 import { Search } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useGioHangItem } from "../utils/GioHangContext";
+import { logout } from "../utils/JwtService";
 
-interface NavbarProps{
+interface NavbarProps {
     tuKhoaTimKiem: string;
-    setTuKhoaTimKiem: (tuKhoa: string)=>void
+    setTuKhoaTimKiem: (tuKhoa: string) => void
 }
-function Navbar({tuKhoaTimKiem, setTuKhoaTimKiem}: NavbarProps) {
+function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
+    const { tongGioHang, setTongGioHang, setGioHangList} = useGioHangItem()
+    
+    const navigate = useNavigate()
     const [tuKhoaTamThoi, setTuKhoaTamThoi] = useState('');
-    const onSearchInputChange = (e : ChangeEvent<HTMLInputElement>) =>{
+    const onSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         setTuKhoaTamThoi(e.target.value);
 
     }
-    const handleSearch = () =>{
-        if(tuKhoaTamThoi!==null){
+    const handleSearch = () => {
+        if (tuKhoaTamThoi !== null) {
             setTuKhoaTimKiem(tuKhoaTamThoi);
         }
     }
-  
-    
+
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
@@ -57,13 +62,13 @@ function Navbar({tuKhoaTimKiem, setTuKhoaTimKiem}: NavbarProps) {
                     </ul>
                 </div>
                 <div className="d-flex">
-                    <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} value={tuKhoaTamThoi} onKeyDown={e=>{
-                        if(e.key==="Enter"){
+                    <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} value={tuKhoaTamThoi} onKeyDown={e => {
+                        if (e.key === "Enter") {
                             setTuKhoaTimKiem(tuKhoaTamThoi);
                         }
                     }}></input>
                     <button className="btn btn-outline-success" type="submit" onClick={handleSearch}><Search></Search></button>
-                    
+
                 </div>
                 <ul className="navbar-nav me-1">
                     <li className="nav-item">
@@ -71,14 +76,24 @@ function Navbar({tuKhoaTimKiem, setTuKhoaTimKiem}: NavbarProps) {
                             <i className="fas fa-shopping-cart"></i>
                         </a>
                     </li>
-                </ul>
-                <ul className="navbar-nav me-2">
-                    <li className="nav-item">
-                        <a className="nav-link" href="#">
-                            <i className="fas fa-user "></i>
+                    <li className="nav-item btn-group dropdown ">
+                        <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button"  aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i className="fas fa-user"></i>
                         </a>
+                        <ul className="dropdown-menu " style={{left:"-110px"}} aria-labelledby="navbarDropdown2">
+                            <li><a className="dropdown-item" href="/nguoi-dung">Tài khoản</a></li>
+                            <li><a className="dropdown-item" href="#">Sách yêu thích</a></li>
+                            <li><a className="dropdown-item" href="dang-nhap" onClick={()=>{
+                                setTongGioHang(0)
+                                logout(navigate)
+                                setGioHangList([])
+                            }}>Đăng xuất</a></li>
+                        </ul>
                     </li>
                 </ul>
+
+
+
             </div>
         </nav>
     )

@@ -1,6 +1,6 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 
-const DangKyNguoiDung = () => {
+const DangKyNguoiDung =  () => {
     const [tenDangNhap, setTenDangNhap] = useState("");
     const [email, setEmail] = useState("");
     const [hoDem, setHoDen] = useState("");
@@ -9,13 +9,63 @@ const DangKyNguoiDung = () => {
     const [matKhau, setMatKhau] = useState("");
     const [matKhauLapLai, setMatKhauLapLai] = useState("");
     const [gioiTinh, setGioiTinh] = useState('M');
+    const [avatar, setAvatar] = useState<File|null>(null)
 
     const [errorTenDangNhap, setErrorTenDangNhap] = useState('');
     const [errorEmail, setErrorEmail] = useState('');
     const [errorMatKhau, setErrorMatKhau] = useState('');
     const [errorMatKhauLapLai, setErrorMatKhauLapLai] = useState('');
+    const [thongBao, setThongBao] = useState("");
 
-    const handleSubmit = () => {
+    const getBase64 = (file: File): Promise<string | null> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result ? (reader.result as string) : null);
+            reader.onerror = (error) => reject(error);
+        });
+    };
+    const handleSubmit = async (e: FormEvent) => {
+        setErrorTenDangNhap('');
+        setErrorEmail('');
+        setErrorMatKhau('')
+        setErrorMatKhauLapLai('')
+        e.preventDefault();
+
+        const isTenDangNhapValid =  !await kiemTraTenDangNhapDaTonTai(tenDangNhap)
+        const  isEmailValid = !await kiemTraEmailDaTonTai(email)
+        const isMatKhauValid = !await kiemTraMatKhau(matKhau)
+        const isMatKhauLapLaiValid = !await kiemTraMatKhauLapLai(matKhauLapLai)
+        
+        if(isTenDangNhapValid&& isEmailValid&& isMatKhauValid && isMatKhauLapLaiValid){
+            const base64Avatar = avatar ? await getBase64(avatar) : null;
+            console.log("avatar: " + base64Avatar);
+            try {
+                const duongDan =`http://localhost:8080/tai-khoan/dang-ky`
+                const response = await fetch(duongDan, {
+                    method: 'POST',
+                    headers: {'Content-type': 'application/json'},
+                    body: JSON.stringify({
+                        tenDangNhap: tenDangNhap,
+                        email: email,
+                        matKhau: matKhau,
+                        hoDem: hoDem,
+                        ten: ten,
+                        gioiTinh: gioiTinh,
+                        soDienThoai: soDienThoai,
+                        avatar: base64Avatar
+                    })
+                })
+                if(response.ok){
+                    setThongBao("Đăng ký thành công, vui lòng kiểm tra email để kích hoạt!")
+                }else{
+                   
+                    setThongBao("Đã xảy ra lỗi trong quá trình đăng ký")
+                }
+            } catch (error) {
+                setThongBao("Đã xảy ra lỗi trong quá trình đăng ký")
+            }
+        }
 
     }
     const kiemTraTenDangNhapDaTonTai = async (tenDangNhap: string) => {
@@ -67,10 +117,10 @@ const DangKyNguoiDung = () => {
         const reEx = /^(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/
         if(!reEx.test(matKhau)){
             setErrorMatKhau("Mật khẩu phải có ít nhất 8 ký tự và bao gồm ít nhất 1 ký tự đặc biệt (!@#$%^&*)");
-            
+            return true;
         }else{
             setErrorMatKhau("")
-         
+         return false
         }
     }
     const handleMatKhauChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -82,10 +132,10 @@ const DangKyNguoiDung = () => {
     const kiemTraMatKhauLapLai=(matKhauLapLai: string)=>{
         if(matKhauLapLai!==matKhau){
             setErrorMatKhauLapLai("Mật khẩu không khớp")
-          
+          return true;
         }else{
             setErrorMatKhauLapLai("")
-           
+           return false
         }
     }
     const handleMatKhauLapLaiChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -94,6 +144,12 @@ const DangKyNguoiDung = () => {
         setErrorMatKhauLapLai("")
        return kiemTraMatKhauLapLai(event.target.value)
     }
+    const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            const file = e.target.files[0];
+            setAvatar(file);
+        }
+    };
     return (
         <div className="container">
             <h2 className="mt-5 text-center">Đăng ký</h2>
@@ -118,6 +174,61 @@ const DangKyNguoiDung = () => {
                     <input className="form-control" type="password" value={matKhauLapLai}
                         id="matKhauLapLai" onChange={handleMatKhauLapLaiChange}></input>
                     <div style={{ color: "red" }}>{errorMatKhauLapLai}</div>
+                    <div className="mb-3">
+                        <label htmlFor="hoDem" className="form-label">Họ đệm</label>
+                        <input
+                            type="text"
+                            id="hoDem"
+                            className="form-control"
+                            value={hoDem}
+                            onChange={(e) => setHoDen(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="ten" className="form-label">Tên</label>
+                        <input
+                            type="text"
+                            id="ten"
+                            className="form-control"
+                            value={ten}
+                            onChange={(e) => setTen(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="soDienThoai" className="form-label">Số điện thoại</label>
+                        <input
+                            type="text"
+                            id="soDienThoai"
+                            className="form-control"
+                            value={soDienThoai}
+                            onChange={(e) => setSoDienThoai(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="gioiTinh" className="form-label">Giới tính</label>
+                        <input
+                            type="text"
+                            id="gioiTinh"
+                            className="form-control"
+                            value={gioiTinh}
+                            onChange={(e) => setGioiTinh(e.target.value)}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="avatar" className="form-label">Avatar</label>
+                        <input
+                            type="file"
+                            id="avatar"
+                            className="form-control"
+                            accept="images/*"
+                            onChange={handleAvatarChange}
+                        />
+                    </div>
+                    <div className="text-center">
+                        <button type="submit" className="btn btn-primary">Đăng Ký</button>
+                        <div style={{ color: "green" }}>{thongBao}</div>
+
+                    </div>
                 </form>
             </div>
         </div>
