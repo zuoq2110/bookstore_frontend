@@ -1,49 +1,100 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import GioHangModel from "../../models/GioHangModel";
+import { jwtDecode } from "jwt-decode";
+import { JwtPayLoad } from "./UserAccount";
+import { layTatCaGioHangByMaNguoiDung } from "../../api/GioHangAPI";
+import { useGioHangItem } from "../utils/GioHangContext";
+import { toast } from "react-toastify";
 
 const DangNhap = () => {
+    const { setTongGioHang, setGioHangList } = useGioHangItem()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [thongBao, setThongBao] = useState("")
     const navigate = useNavigate()
-    const handleSubmit = () => {
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault()
         const loginRequest = {
             username: username,
             password: password
         };
-            fetch('http://localhost:8080/tai-khoan/dang-nhap', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(loginRequest)
-            }
-            )
-            .then((response)=>{
-                if(response.ok){
+        toast.promise(fetch('http://localhost:8080/tai-khoan/dang-nhap', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginRequest)
+        }
+        )
+            .then((response) => {
+                if (response.ok) {
                     setThongBao("Đăng nhập thành công")
                     return response.json()
-                    
-                }else{
+
+                } else {
                     setThongBao("Sai tên đăng nhập hoặc mật khẩu")
                 }
             }).then(
-                (data)=>{
-                    const {jwt} = data;
-                    localStorage.setItem('token',jwt)
-                    navigate("/")
-                }
-            ).catch((error)=>{
-                console.log(error);
-                
-            })
-        } 
-        
+                async (data) => {
+                    const { jwt } = data;
+                    const decodedToken = jwtDecode(jwt) as JwtPayLoad;
+                    toast.success("Đăng nhập thành công")
+                    localStorage.setItem('token', jwt)
 
-    
+                    const gioHangData = localStorage.getItem("cart")
+                    let gioHang: GioHangModel[] = gioHangData ? JSON.parse(gioHangData) : []
+                    if (gioHang.length !== 0) {
+                        gioHang = gioHang.map(c => ({ ...c, maNguoiDung: decodedToken.id }))
+                        const duongDan = "http://localhost:8080/gio-hang/them"
+                        fetch(duongDan, {
+                            method: 'POST',
+                            headers: {
+                                Authorization: `Bearer ${jwt}`,
+                                "content-type": "application/json",
+                            },
+                            body: JSON.stringify(gioHang),
+                        })
+                            .then(() => {
+                                async function layGioHang() {
+                                    const response = await layTatCaGioHangByMaNguoiDung(decodedToken.id);
+                                    localStorage.removeItem("cart")
+                                    gioHang = response
+                                    localStorage.setItem("cart", JSON.stringify(gioHang));
+                                    setTongGioHang(gioHang.length)
+                                    setGioHangList(gioHang)
+                                    console.log(response)
+                                }
+                                layGioHang();
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            })
+                    } else {
+                        const response = await layTatCaGioHangByMaNguoiDung(decodedToken.id);
+                        localStorage.removeItem("cart")
+                        gioHang = response
+                        localStorage.setItem("cart", JSON.stringify(gioHang));
+                        setTongGioHang(gioHang.length)
+                        setGioHangList(gioHang)
+                    }
+                    navigate("/");
+
+                }
+            ).catch((error) => {
+                console.log(error);
+                toast.error("Tên đăng nhập hoặc mật khẩu không chính xác")
+
+            }),
+            { pending: "Đang trong quá trình xử lý" }
+        )
+    }
+
+
+
     return (
-<div className="container ">
-    <h3 className="mt-3">Đăng Nhập</h3>
-        <form className="form col-md-6 col-12 mt-4 mx-auto">
-            
+        <div className="container ">
+            <h3 className="mt-3 text-center">Đăng Nhập</h3>
+            <form onSubmit={handleSubmit} className="form col-md-6 col-12 mt-4 mx-auto">
+
                 <div className="form-outline">
                     <label className="form-label text-left">Username</label>
                     <input type="text" className="form-control"
@@ -70,9 +121,9 @@ const DangNhap = () => {
                         <a href="#!">Forgot password?</a>
                     </div>
                 </div>
-
-                <button type="button" className="btn btn-primary btn-block mb-4" onClick={handleSubmit}>Sign in</button>
-
+                <div className="text-center">
+                <button type="submit" className=" btn btn-primary btn-block mb-4">Sign in</button>
+                </div>
                 <div className="text-center">
                     <p>Not a member? <a href="/dang-ky">Register</a></p>
                     <p>or sign up with:</p>
@@ -92,8 +143,8 @@ const DangNhap = () => {
                         <i className="fab fa-github"></i>
                     </button>
                 </div>
-           
-        </form>
+
+            </form>
         </div>
 
     )

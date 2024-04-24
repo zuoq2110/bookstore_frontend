@@ -17,7 +17,7 @@ export function isToken() {
    }
  }
  export function logout(navigate: any){
-   navigate("/login")
+   navigate("/dang-nhap")
    localStorage.removeItem('token')
    localStorage.removeItem('cart')
  }

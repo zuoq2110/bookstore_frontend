@@ -1,15 +1,16 @@
 class NguoiDungModel {
     maNguoiDung: number;
-    diaChiGiaoHang?: string;
+    diaChiGiaoHang: string;
     diaChiMuaHang?: string;
-    email?: string;
+    email: string;
     hoDem?: string;
     tenDangNhap?: string;
-    ten?: string;
-    soDienThoai?: string;
+    ten: string;
+    soDienThoai: string;
     gioiTinh: string;
     matKhau?: string;
-    avatar?: string;
+    avatar: string;
+    ngaySinh: Date
 
 
     constructor(
@@ -35,6 +36,7 @@ class NguoiDungModel {
         this.soDienThoai = soDienThoai;
         this.gioiTinh = gioiTinh;
         this.matKhau = matKhau;
+        this.ngaySinh=ngaySinh
         this.avatar = avatar;
     }
 

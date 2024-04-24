@@ -48,14 +48,20 @@ const CarouselItem: React.FC<CarouselItemInterface> = (props) => {
     return (
         <div className="row align-items-center">
             <a className="col-5" href={`sach/${props.sach.maSach}`}>
-            <div>                                                                                                                                                        
-                <img src={duLieuAnh} className="float-end" style={{ width: '150px' }} />
-            </div>
+                <div>
+                    <img src={duLieuAnh} className="float-end" style={{ width: '150px' }} />
+                </div>
             </a>
             <div className="col-7">
-                <h5>{props.sach.tenSach}</h5>
-                <p>{props.sach.moTa}</p>
-            </div>
+                <h5 style={{width:"500px"}}>{props.sach.tenSach}</h5>
+                <p style={{
+                    overflow: "hidden",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 2,
+                    lineClamp:2,
+                    WebkitBoxOrient:"vertical",
+                    width:"600px"}}>{props.sach.moTa}</p>
+        </div>
         </div >
     );
 }

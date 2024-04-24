@@ -2,6 +2,7 @@ class DanhGiaModel{
     maDanhGia: number;
     diemXepHang: number;
     nhanXet: string;
+    timestamp? : string;
 
     constructor(
         maDanhGia: number,

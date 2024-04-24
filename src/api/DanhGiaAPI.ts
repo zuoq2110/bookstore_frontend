@@ -13,6 +13,7 @@ export async function layDanhGia(duongDan: string): Promise<DanhGiaModel[]>{
             maDanhGia: responseData[key].maDanhGia,
             diemXepHang: responseData[key].diemXepHang,
             nhanXet: responseData[key].nhanXet,
+            timestamp: responseData[key].timestamp
         })
        
     }

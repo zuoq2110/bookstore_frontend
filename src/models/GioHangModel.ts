@@ -4,6 +4,7 @@ class GioHangModel{
     maGioHang?: number;
     soLuong: number;
     sach: SachModel;
+    review?: boolean
 
     constructor(
         soLuong: number,
