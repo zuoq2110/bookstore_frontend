@@ -1,18 +1,24 @@
 import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GioHangModel from "../../models/GioHangModel";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayLoad } from "./UserAccount";
 import { layTatCaGioHangByMaNguoiDung } from "../../api/GioHangAPI";
 import { useGioHangItem } from "../utils/GioHangContext";
 import { toast } from "react-toastify";
+import { Button, TextField } from "@mui/material";
+import { useAuth } from "../utils/AuthContext";
 
 const DangNhap = () => {
+    const { isLoggedIn, setLoggedIn } = useAuth();
     const { setTongGioHang, setGioHangList } = useGioHangItem()
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
     const [thongBao, setThongBao] = useState("")
     const navigate = useNavigate()
+    if (isLoggedIn) {
+        navigate("/")
+    }
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault()
         const loginRequest = {
@@ -27,7 +33,6 @@ const DangNhap = () => {
         )
             .then((response) => {
                 if (response.ok) {
-                    setThongBao("Đăng nhập thành công")
                     return response.json()
 
                 } else {
@@ -37,8 +42,13 @@ const DangNhap = () => {
                 async (data) => {
                     const { jwt } = data;
                     const decodedToken = jwtDecode(jwt) as JwtPayLoad;
+                    if (decodedToken.enabled === false) {
+                        toast.warning("Tài khoản của bạn chưa kích hoạt. Vui lòng kiểm tra email để kích hoạt!");
+                        return;
+                    }
                     toast.success("Đăng nhập thành công")
                     localStorage.setItem('token', jwt)
+                    setLoggedIn(true)
 
                     const gioHangData = localStorage.getItem("cart")
                     let gioHang: GioHangModel[] = gioHangData ? JSON.parse(gioHangData) : []
@@ -76,9 +86,13 @@ const DangNhap = () => {
                         setTongGioHang(gioHang.length)
                         setGioHangList(gioHang)
                     }
-                    navigate("/");
+                    if (decodedToken.isAdmin) {
+                        navigate("/admin/dashboard")
+                    } else
+                        navigate("/")
 
                 }
+
             ).catch((error) => {
                 console.log(error);
                 toast.error("Tên đăng nhập hoặc mật khẩu không chính xác")
@@ -91,58 +105,47 @@ const DangNhap = () => {
 
 
     return (
-        <div className="container ">
-            <h3 className="mt-3 text-center">Đăng Nhập</h3>
-            <form onSubmit={handleSubmit} className="form col-md-6 col-12 mt-4 mx-auto">
+        <div className="container my-5 py-4 rounded-5 shadow-5 bg-light" 
+        style={{ width: "450px" }}>
+            <h1 className=" text-center">Đăng Nhập</h1>
+            <form onSubmit={handleSubmit} className="form mt-3" style={{ padding: "0 20px" }}>
 
-                <div className="form-outline">
-                    <label className="form-label text-left">Username</label>
-                    <input type="text" className="form-control"
-                        value={username} onChange={(e) => setUsername(e.target.value)} />
-
-                </div>
-
-                <div className="form-outline mb-4">
-                    <label className="form-label" >Password</label>
-                    <input type="password" id="form2Example2" className="form-control"
-                        value={password} onChange={(e) => setPassword(e.target.value)} />
-
-                </div>
+                <TextField
+                    fullWidth
+                    required={true}
+                    id='outlined-required'
+                    label='Tên đăng nhập'
+                    placeholder='Nhập tên đăng nhập'
+                    value={username}
+                    onChange={(e: any) => setUsername(e.target.value)}
+                    className='mb-3'
+                />
+                <TextField
+                    fullWidth
+                    required={true}
+                    type='password'
+                    id='outlined-required'
+                    label='Mật khẩu'
+                    placeholder='Nhập mật khẩu'
+                    value={password}
+                    onChange={(e: any) => setPassword(e.target.value)}
+                    className='mb-3'
+                />
                 {thongBao && <div style={{ color: 'red' }}>{thongBao}</div>}
-                <div className="row mb-4">
-                    <div className="col d-flex justify-content-center">
-                        <div className="form-check">
-                            <input className="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                            <label className="form-check-label" > Remember me </label>
-                        </div>
-                    </div>
-
-                    <div className="col">
-                        <a href="#!">Forgot password?</a>
-                    </div>
+                <div className='d-flex justify-content-end mt-2 px-3'>
+                    <span>
+                        Bạn chưa có tài khoản? <Link to={"/dang-ky"}>Đăng ký</Link>
+                    </span>
                 </div>
-                <div className="text-center">
-                <button type="submit" className=" btn btn-primary btn-block mb-4">Sign in</button>
+                <div className="text-center my-3">
+                    <Button fullWidth
+                        variant="contained"
+                        type="submit"
+                        sx={{
+                            padding: "10px",
+                        }}>Đăng nhập</Button>
                 </div>
-                <div className="text-center">
-                    <p>Not a member? <a href="/dang-ky">Register</a></p>
-                    <p>or sign up with:</p>
-                    <button type="button" className="btn btn-link btn-floating mx-1">
-                        <i className="fab fa-facebook-f"></i>
-                    </button>
 
-                    <button type="button" className="btn btn-link btn-floating mx-1">
-                        <i className="fab fa-google"></i>
-                    </button>
-
-                    <button type="button" className="btn btn-link btn-floating mx-1">
-                        <i className="fab fa-twitter"></i>
-                    </button>
-
-                    <button type="button" className="btn btn-link btn-floating mx-1">
-                        <i className="fab fa-github"></i>
-                    </button>
-                </div>
 
             </form>
         </div>

@@ -21,6 +21,10 @@ export async function layDanhGia(duongDan: string): Promise<DanhGiaModel[]>{
     return ketQua;
 }
 
+export async function layTongSoDanhGia(): Promise<number>{
+    const duongDan = `http://localhost:8080/su-danh-gia/search/countBy`
+    return my_request(duongDan)
+}
 export async function layToanBoDanhGiaCuaMotSach(maSach: number): Promise<DanhGiaModel[]>{
     const duongDan: string = `http://localhost:8080/sach/${maSach}/danhSachSuDanhGia`;
     return layDanhGia(duongDan);

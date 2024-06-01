@@ -10,7 +10,8 @@ class NguoiDungModel {
     gioiTinh: string;
     matKhau?: string;
     avatar: string;
-    ngaySinh: Date
+    ngaySinh: Date;
+    quyen?: number
 
 
     constructor(

@@ -1,13 +1,20 @@
+import TheLoaiModel from "./TheLoaiModel";
+
 class SachModel {
     maSach: number;
     tenSach?: string; // có thể bị NULL
     giaBan: number;
-    giaNiemYet?: number;
+    giaNiemYet: number;
     moTa: string;
     soLuong: number;
     tenTacGia?: string;
     trungBinhXepHang?: number;
     giamGia: number
+    soLuongDaBan?: number
+    thumbnail?: string
+    maTheLoai?: number[]
+    danhSachTheLoai?: TheLoaiModel[]
+    anhLienQuan?: string[]
 
     constructor(maSach: number,
         tenSach: string, // có thể bị NULL

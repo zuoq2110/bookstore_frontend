@@ -41,15 +41,15 @@ const CarouselItem: React.FC<CarouselItemInterface> = (props) => {
             </div>
         );
     }
-    let duLieuAnh: string = "";
-    if (danhSachAnh[0] && danhSachAnh[0].duLieuAnh) {
-        duLieuAnh = danhSachAnh[0].duLieuAnh;
+    let duongDan: string = "";
+    if (danhSachAnh[0] && danhSachAnh[0].duongDan) {
+        duongDan = danhSachAnh[0].duongDan;
     }
     return (
         <div className="row align-items-center">
             <a className="col-5" href={`sach/${props.sach.maSach}`}>
                 <div>
-                    <img src={duLieuAnh} className="float-end" style={{ width: '150px' }} />
+                    <img src={duongDan} className="float-end" style={{ width: '150px' }} />
                 </div>
             </a>
             <div className="col-7">

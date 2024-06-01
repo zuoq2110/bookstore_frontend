@@ -9,8 +9,9 @@ import { VisibilityOutlined } from "@mui/icons-material"
 interface DonHangTableInterface{
     handleOpen : any;
 setMaDonHang:any
-countReload: number
+countReload: any
 setCountReload: any
+setOption?: any
 }
 const DonHangTable: React.FC<DonHangTableInterface> = (props) => {
     const [donHang, setDonHang] = useState<DonHangModel[]>([])

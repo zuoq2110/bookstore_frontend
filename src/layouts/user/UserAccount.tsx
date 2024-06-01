@@ -19,7 +19,8 @@ import DonHangForm from "./DonHangForm"
 import { getIdUserByToken } from "../utils/JwtService"
 export interface JwtPayLoad {
     id: any;
-
+    isAdmin: boolean;
+    enabled: boolean
 }
 
 

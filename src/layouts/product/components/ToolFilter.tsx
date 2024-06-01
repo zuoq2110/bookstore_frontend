@@ -26,7 +26,7 @@ const ToolFilter: React.FC<ToolFilterProps> = (props) => {
     useEffect(() => {
         layToanBoTheLoai()
             .then((response) => {
-                setTheLoai(response)
+                setTheLoai(response.danhSachTheLoai)
             })
     }, [])
     const handleTheLoaiChange = (event: SelectChangeEvent) => {

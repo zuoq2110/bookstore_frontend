@@ -97,9 +97,9 @@ const GioHangProps: React.FC<SachGioHangProps> = (props) => {
                 setErroring(error)
             })
     }, [])
-    let duLieuAnh: string = ""
-    if (danhSachAnh[0] && danhSachAnh[0].duLieuAnh) {
-        duLieuAnh = danhSachAnh[0].duLieuAnh
+    let duongDan: string = ""
+    if (danhSachAnh[0] && danhSachAnh[0].duongDan) {
+        duongDan = danhSachAnh[0].duongDan
     }
 
     const [open, setOpen] = useState(false)
@@ -116,7 +116,7 @@ const GioHangProps: React.FC<SachGioHangProps> = (props) => {
                 <div className='d-flex'>
                     <Link to={`/sach/${props.gioHang.sach.maSach}`}>
                         <img
-                            src={duLieuAnh}
+                            src={duongDan}
                             className='card-img-top'
                             alt={props.gioHang.sach.tenSach}
                             style={{ width: "100px" }}

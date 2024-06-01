@@ -176,9 +176,9 @@ const SachProps: React.FC<SachPropsInterface> = ({ sach }) => {
             </div>
         );
     }
-    let duLieuAnh: string = "";
-    if (danhSachAnh[0] && danhSachAnh[0].duLieuAnh) {
-        duLieuAnh = danhSachAnh[0].duLieuAnh;
+    let duongDan: string = "";
+    if (danhSachAnh[0] && danhSachAnh[0].duongDan) {
+        duongDan = danhSachAnh[0].duongDan;
     }
 
     return (
@@ -193,7 +193,7 @@ const SachProps: React.FC<SachPropsInterface> = ({ sach }) => {
                     </h4>}
                 <Link to={`/sach/${sach.maSach}`}>
                     <img
-                        src={duLieuAnh}
+                        src={duongDan}
                         className="card-img-top"
                         alt={sach.tenSach}
                         style={{ height: '200px' }}

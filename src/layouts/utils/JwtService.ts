@@ -21,3 +21,10 @@ export function isToken() {
    localStorage.removeItem('token')
    localStorage.removeItem('cart')
  }
+
+ export function getUsernameByToken() {
+   const token = localStorage.getItem('token');
+   if (token) {
+      return jwtDecode(token).sub;
+   }
+}

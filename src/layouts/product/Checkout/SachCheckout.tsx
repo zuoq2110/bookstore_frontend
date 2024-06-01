@@ -36,17 +36,15 @@ const SachCheckout: React.FC<SachCheckoutProps> = (props) => {
                 console.log(error);
             });
     }, [props.gioHang.sach.maSach])
-    console.log(gioHang.review)
-    console.log(props.maDonHang)
-    let duLieuAnh: string = "";
-    if (danhSachAnh[0] && danhSachAnh[0].duLieuAnh) {
-        duLieuAnh = danhSachAnh[0].duLieuAnh;
+    let duongDan: string = "";
+    if (danhSachAnh[0] && danhSachAnh[0].duongDan) {
+        duongDan = danhSachAnh[0].duongDan;
     }
     return (
         <div className="row">
             <div className="col">
                 <div className="d-flex p-2">
-                    <img src={duLieuAnh}
+                    <img src={duongDan}
                         style={{ width: "100px" }}
                         alt={gioHang.sach.tenSach}></img>
                     <div className="d-flex flex-column">

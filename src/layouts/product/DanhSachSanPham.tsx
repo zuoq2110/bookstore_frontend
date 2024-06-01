@@ -27,7 +27,7 @@ function DanhSachSanPham({filter,tuKhoaTimKiem, maTheLoai, isPhanTrang }: DanhSa
 	}
     useEffect(() => {
         if (tuKhoaTimKiem === '' && maTheLoai === 0 &&filter===0 ) {
-            layToanBoSach(trangHienTai - 1).then(data => {
+            layToanBoSach(8,trangHienTai - 1).then(data => {
                 setDanhSachQuyenSach(data.ketQua);
                 setTongSoTrang(data.tongSoTrang);
                 setDangTaiDuLieu(false);

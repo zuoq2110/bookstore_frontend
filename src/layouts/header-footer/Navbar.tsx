@@ -52,23 +52,15 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
                                 <li><Link className="dropdown-item" to="/kho-sach/6">Lịch sử</Link></li>
                             </ul>
                         </li>
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Quy định bán hàng
-                            </a>
-                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown2">
-                                <li><a className="dropdown-item" href="#">Quy định 1</a></li>
-                                <li><a className="dropdown-item" href="#">Quy định 2</a></li>
-                                <li><a className="dropdown-item" href="#">Quy định 3</a></li>
-                            </ul>
-                        </li>
+                       
                         <li className="nav-item">
-                            <a className="nav-link" href="#">Liên hệ</a>
+                            <a className="nav-link" href="/about">Giới thiệu</a>
                         </li>
                     </ul>
                 </div>
                 <div className="d-flex">
-                    <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" onChange={onSearchInputChange} value={tuKhoaTamThoi} onKeyDown={e => {
+                    <input className="form-control me-2" type="search" placeholder="Tìm kiếm" aria-label="Search" 
+                    onChange={onSearchInputChange} value={tuKhoaTamThoi} onKeyDown={e => {
                         if (e.key === "Enter") {
                             setTuKhoaTimKiem(tuKhoaTamThoi);
                         }

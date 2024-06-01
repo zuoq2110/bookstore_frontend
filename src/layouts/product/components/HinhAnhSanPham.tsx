@@ -51,7 +51,7 @@ const HinhAnhSanPham: React.FC<HinhAnhSanPhamInterface> = (props) => {
             {
                 danhSachAnh.map((hinhAnh, index)=>(
                     <div key={index}>
-                        <img src={hinhAnh.duLieuAnh} alt={hinhAnh.tenHinhAnh} style={{maxWidth:'250px'}}></img>
+                        <img src={hinhAnh.duongDan} alt={hinhAnh.tenHinhAnh} style={{maxWidth:'250px'}}></img>
                     </div>
                 ))
             }

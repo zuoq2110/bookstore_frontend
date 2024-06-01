@@ -15,6 +15,8 @@ import TextEllipsis from "./components/textEllipsis/TextEllipsis";
 import { toast } from "react-toastify";
 import CheckOutPage from "./Checkout/CheckoutPage";
 import GioHangModel from "../../models/GioHangModel";
+import { layToanBoDanhGiaCuaMotSach } from "../../api/DanhGiaAPI";
+import DanhGiaModel from "../../models/DanhGiaModel";
 
 
 const ChiTietSanPham: React.FC = () => {
@@ -23,10 +25,10 @@ const ChiTietSanPham: React.FC = () => {
     const [theLoai, setTheLoai] = useState<TheLoaiModel[]>()
     const [isCheckout, setIsCheckout] = useState(false);
     const [tongTien, setTongTien] = useState(0)
-    const[muaNgay, setMuaNgay] = useState(true);
+    const [muaNgay, setMuaNgay] = useState(true);
     useEffect(() => {
         getTheLoaiByMaSach(maSachNumber).then(response => {
-            setTheLoai(response)
+            setTheLoai(response.danhSachTheLoai)
         })
     })
     let maSachNumber = 0
@@ -43,7 +45,7 @@ const ChiTietSanPham: React.FC = () => {
     const [dangTaiDuLieu, setDangTaiDuLieu] = useState(true);
     const [baoLoi, setBaoLoi] = useState(null);
     const [soLuong, setSoLuong] = useState(1);
-
+   
     const giamSoLuong = () => {
         if (soLuong > 1) {
             setSoLuong(soLuong - 1)
@@ -58,7 +60,7 @@ const ChiTietSanPham: React.FC = () => {
 
     const [gioHang, setGioHang] = useState<GioHangModel[]>([])
     const handleMuaNgay = (sach: SachModel) => {
-        setGioHang([{sach, soLuong }])
+        setGioHang([{ sach, soLuong }])
         setIsCheckout(true)
         setTongTien(sach.giaBan * soLuong)
     }
@@ -125,6 +127,8 @@ const ChiTietSanPham: React.FC = () => {
 
         setTongGioHang(gioHangList.length)
     }
+
+   
     useEffect(() => {
         laySachTheoMaSach(maSachNumber).then(data => {
             setSach(data);
@@ -158,7 +162,7 @@ const ChiTietSanPham: React.FC = () => {
             </div>
         );
     }
-    
+
     return (
         <>
             {!isCheckout ?
@@ -238,6 +242,7 @@ const ChiTietSanPham: React.FC = () => {
                                         <hr />
                                         <TextEllipsis
                                             text={sach.moTa}
+                                            isShow={true}
                                         />
                                     </div>
                                     <div className="col-4 ">
@@ -270,6 +275,7 @@ const ChiTietSanPham: React.FC = () => {
                         </div>
                     </div>
                     <div className="container bg-light rounded">
+                        
                         <div className="row mt-4 mb-4">
                             <DanhGiaSanPham maSach={maSachNumber} />
                         </div>

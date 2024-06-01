@@ -1,5 +1,5 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { FormEvent, useEffect, useState } from "react"
 import DonHangModel from "../../models/DonHangModel"
 import { lay1DonHangByMaDonHang, layToanBoDonHang, layToanBoDonHangById } from "../../api/DonHangAPI"
 import DonHangDetail from "./DonHangDetail"
@@ -46,6 +46,30 @@ const DonHangForm: React.FC<DonHangFormProps> = (props) => {
             }).catch(err => console.log(err))
     }, [props.maDonHang, props.option])
 
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) =>{
+        event.preventDefault();
+        const token = localStorage.getItem("token");
+        fetch(`http://localhost:8080/don-hang/cap-nhat`, {
+            method: "PUT",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...donHang, tinhTrangDonHang: donHang.tinhTrangDonHang})
+        }).then(response => {
+            if (response.ok) {
+                toast.success("Cập nhật đơn hàng thành công")
+                
+                props.setCountReload(Math.random)
+                props.handleClose()
+            } else {
+                toast.error("Gặp lỗi trong quá trình cập nhật")
+            }
+        }).catch((error) => {
+            console.log(error);
+            toast.error("Gặp lỗi trong quá trình cập nhật đơn hàng");
+        });
+    }
     const handleCancleOrder = () => {
         const token = localStorage.getItem("token");
         fetch(`http://localhost:8080/don-hang/cap-nhat`, {
@@ -77,7 +101,7 @@ const DonHangForm: React.FC<DonHangFormProps> = (props) => {
                     : "CHI TIẾT ĐƠN HÀNG"}
             </Typography>
             <div className="container px-5">
-                <form className="form">
+                <form className="form" onSubmit={handleSubmit}>
                     {props.option === 'update' ? (
                         <FormControl sx={{ m: 1 }} size='small' fullWidth>
                             <InputLabel id='demo-simple-select-helper-label'>
