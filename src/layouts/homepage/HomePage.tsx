@@ -2,14 +2,20 @@ import React from "react";
 import Banner from "./components/Banner";
 import Carousel from "./components/Carousel";
 import DanhSachSanPham from "../product/DanhSachSanPham";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SachBanChay from "../product/components/SachBanChay";
 import SachMoi from "../product/components/SachMoi";
+import { isTokenExpired } from "../utils/JwtService";
+import { toast } from "react-toastify";
 
 interface HomePageProps {
     tuKhoaTimKiem: string;
 }
 function HomePage({ tuKhoaTimKiem }: HomePageProps) {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
     const { maTheLoai } = useParams();
     let maTheLoaiNumber = 0;
     try {

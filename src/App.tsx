@@ -4,7 +4,7 @@ import Navbar from './layouts/header-footer/Navbar';
 import Footer from './layouts/header-footer/Footer';
 import HomePage from './layouts/homepage/HomePage';
 import { layToanBoSach } from './api/SachAPI';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import About from './layouts/about/About';
 import ChiTietSanPham from './layouts/product/ChiTietSanPham';
 import DangKyNguoiDung from './layouts/user/DangKyNguoiDung';
@@ -16,7 +16,7 @@ import Error403 from './layouts/Error/Error403';
 import UserCheck from './layouts/user/UserAccount';
 import { GioHangProvider } from './layouts/utils/GioHangContext';
 import DanhSachGioHang from './layouts/product/components/cart/DanhSachGioHang';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { ConfirmProvider } from 'material-ui-confirm';
 import 'react-toastify/dist/ReactToastify.css';
 import ToanBoSach from './layouts/product/components/ToanBoSach';
@@ -28,10 +28,12 @@ import BookManagement from './layouts/admin/components/Book/BookManagement';
 import GenreManagement from './layouts/admin/components/genre/GenreManagement';
 import UserManagementPage from './layouts/admin/components/user/UserManagement';
 import OrderManagementPage from './layouts/admin/components/order/OrderManagement';
+import { isTokenExpired } from './layouts/utils/JwtService';
 function MyRoutes() {
   const [tuKhoaTimKiem, setTuKhoaTimKiem] = useState('');
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith("/admin");
+ 
   return (
     <AuthProvider>
       <GioHangProvider>
@@ -60,16 +62,16 @@ function MyRoutes() {
           {isAdminPath && (
             <div className='row overflow-hidden w-100'>
               <div className='col-2 col-md-3 col-lg-2'>
-                <Sidebar/>
+                <Sidebar />
               </div>
               <div className='col-lg-10 col-md-9'>
                 <Routes>
                   <Route path='/admin' element={<Dashboard></Dashboard>} />
-                  <Route path='/admin/dashboard' element={<Dashboard/>} />
-                  <Route path='/admin/book' element={<BookManagement/>} />
-                  <Route path='/admin/user' element={<UserManagementPage/>} />
-                  <Route path='/admin/genre' element={<GenreManagement/>} />
-                  <Route path='/admin/order' element={<OrderManagementPage/>} />
+                  <Route path='/admin/dashboard' element={<Dashboard />} />
+                  <Route path='/admin/book' element={<BookManagement />} />
+                  <Route path='/admin/user' element={<UserManagementPage />} />
+                  <Route path='/admin/genre' element={<GenreManagement />} />
+                  <Route path='/admin/order' element={<OrderManagementPage />} />
 
                 </Routes>
               </div>
@@ -88,6 +90,7 @@ function MyRoutes() {
 }
 
 function App() {
+ 
   return (
     <BrowserRouter>
       <MyRoutes></MyRoutes>

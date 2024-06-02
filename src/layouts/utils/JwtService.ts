@@ -28,3 +28,15 @@ export function isToken() {
       return jwtDecode(token).sub;
    }
 }
+export function isTokenExpired(token: string) {
+   const decodedToken = jwtDecode(token);
+
+   if (!decodedToken.exp) {
+      // Token không có thời gian hết hạn (exp)
+      return false;
+   }
+
+   const currentTime = Date.now() / 1000; // Thời gian hiện tại tính bằng giây
+
+   return currentTime < decodedToken.exp;
+}

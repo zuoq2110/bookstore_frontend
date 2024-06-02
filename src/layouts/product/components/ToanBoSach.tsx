@@ -8,6 +8,10 @@ import { useParams } from "react-router-dom"
 import DanhSachSanPham from "../DanhSachSanPham"
 
 const ToanBoSach = () => {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+    });
     const [danhSachQuyenSach, setDanhSachQuyenSach] = useState<SachModel[]>([])
     const [trangHienTai, setTrangHienTai] = useState(1)
     const [tongSoTrang, setTongSoTrang] = useState(0)

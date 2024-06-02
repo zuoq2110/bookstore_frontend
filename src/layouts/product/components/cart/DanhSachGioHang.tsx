@@ -45,7 +45,7 @@ const DanhSachGioHang: React.FC<DanhSachGioHangProps> = () => {
                                 width='63%'
                             />
                             <Link
-                                to={"/search"}
+                                to={"/kho-sach"}
                                 className='position-absolute'
                                 style={{ bottom: "100px" }}
                             >

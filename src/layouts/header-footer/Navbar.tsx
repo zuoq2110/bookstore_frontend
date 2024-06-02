@@ -48,8 +48,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
                                 <li><Link className="dropdown-item" to="/kho-sach/1">Kinh dị</Link></li>
                                 <li><Link className="dropdown-item" to="/kho-sach/3">Trinh thám</Link></li>
                                 <li><Link className="dropdown-item" to="/kho-sach/4">Truyện tranh</Link></li>
-                                <li><Link className="dropdown-item" to="/kho-sach/5">Ngôn tình</Link></li>
-                                <li><Link className="dropdown-item" to="/kho-sach/6">Lịch sử</Link></li>
+                             
                             </ul>
                         </li>
                        
@@ -65,7 +64,7 @@ function Navbar({ tuKhoaTimKiem, setTuKhoaTimKiem }: NavbarProps) {
                             setTuKhoaTimKiem(tuKhoaTamThoi);
                         }
                     }}></input>
-                    <button className="btn btn-outline-success" type="submit" onClick={handleSearch}><Search></Search></button>
+                    <button className="btn btn-outline-primary" type="submit" onClick={handleSearch}><Search></Search></button>
 
                 </div>
                 <ul className="navbar-nav me-1">
